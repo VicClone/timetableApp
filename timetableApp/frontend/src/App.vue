@@ -1,6 +1,7 @@
 <template>
   <v-app>
     <v-content>
+      <v-btn v-if="isAuth" @click="logout">Выйти</v-btn>
       <router-view/>
     </v-content>
   </v-app>
@@ -18,6 +19,21 @@ export default {
 
   data: () => ({
     //
-  })
+  }),
+
+  computed: {
+    isAuth () {
+      return this.$store.getters.isAuth
+    }
+  },
+
+  methods: {
+    logout () {
+      this.$store.dispatch('logout')
+        .then(() => {
+          this.$router.push({ name: 'login' })
+        })
+    }
+  }
 }
 </script>

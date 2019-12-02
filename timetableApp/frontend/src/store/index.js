@@ -5,10 +5,14 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
   state: {
+    status: '',
+    token: localStorage.getItem('token') || '',
+    user: {}
   },
   mutations: {
   },
   actions: {
+    // login({commit}, user)
   },
   modules: {
   }

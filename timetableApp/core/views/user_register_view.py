@@ -42,7 +42,7 @@ class UserValidate(ValidationError):
         user = User(
             login=self.login,
             email=self.email,
-            last_name=self.last_name
+            last_name=self.last_name,
             first_name=self.first_name
         )
         user.set_password(self.password)

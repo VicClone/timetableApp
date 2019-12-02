@@ -10,7 +10,7 @@ class UserAuthView(ObtainAuthToken):
     def post(self, request):
         serializer = self.serializer_class(
             data=request.data,
-            context=('request'=request)
+            context={'request': request}
         )
         if serializer.is_valid():
             user = serializer.validated_data('user')
