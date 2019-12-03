@@ -15,13 +15,13 @@
               label="Имя"
               name="name"
               outlined
-              v-model="form.firstName">
+              v-model="form.first_name">
             </v-text-field>
             <v-text-field
               label="Фамилия"
               name="lastname"
               outlined
-              v-model="form.lastName">
+              v-model="form.last_name">
             </v-text-field>
             <v-text-field
               label="E-mail"
@@ -39,7 +39,7 @@
               label="Повторите пароль"
               name="passwordConfirm"
               outlined
-              v-model="form.passwordConfirm">
+              v-model="form.password_confirmation">
             </v-text-field>
             <v-btn @click="register">Зарегистрироваться</v-btn>
           </v-col>
@@ -54,42 +54,43 @@ import Form from 'vform'
 
 export default {
   data: () => ({
-    form: {
+    form: new Form({
       login: '',
-      lastName: '',
-      firstName: '',
+      last_name: '',
+      first_name: '',
       email: '',
       password: '',
-      passwordConfirm: ''
-    }
+      password_confirmation: ''
+    })
   }),
   methods: {
-    /* register () {
-      const data = {
-        name: this.name,
-        email: this.email,
-        password: this.password
-      }
-      this.$store.dispatch('register', data)
-        .then(() => this.$router.push('/'))
-        .catch(err => console.log(err))
-    }, */
-
-    async register () {
-      await this.form.post('api/register')
+    /* async register () {
+      await this.form.post('api/register/')
 
       const form = new Form({
         'username': this.form.email,
         'password': this.form.password
       })
       try {
-        const { data: { token } } = await form.post('/api/login')
+        const { data: { token } } = await form.post('/api/login/')
         this.$store.dispatch('auth/saveToken', { token, remember: true })
         await this.$store.dispatch('auth/fetchUser')
         this.$router.push({ name: 'home' })
       } catch (e) {
         console.log('error: ', e)
       }
+    } */
+    register () {
+      this.$http.post('api/register/', this.form).then(resp => {
+        // this.$refs.loginform.reset()
+        console.log(resp.data)
+        // this.$store.dispatch('auth/saveToken', { token, remember: true })
+        // this.$cookie.set('remember', this.loginForm.remember, { expires: '1M' })
+        // this.successCallback(resp.data)
+      }).catch(err => {
+        console.log('error', err)
+        // this.msgs = this.msgsInContextHandler(err, 'loginForm')
+      })
     }
   }
 }

@@ -6,20 +6,20 @@
         <v-layout row wrap center>
           <v-flex class="main" xs10>
             <v-text-field
-              v-model="email"
-              label="E-mail"
+              v-model="form.login"
+              label="Login"
               outlined>
             </v-text-field>
           </v-flex>
           <v-flex xs10>
             <v-text-field
-              v-model="password"
+              v-model="form.password"
               label="Пароль"
               outlined>
             </v-text-field>
           </v-flex>
           <v-flex xs10>
-            <v-btn>Вход</v-btn>
+            <v-btn @click="login">Вход</v-btn>
           </v-flex>
         </v-layout>
       </v-form>
@@ -28,18 +28,31 @@
 </template>
 
 <script>
+import Form from 'vform'
+
 export default {
   data: () => ({
-    email: '',
-    password: ''
+    form: new Form({
+      login: '',
+      password: ''
+    })
   }),
   methods: {
-    login () {
-      const email = this.email
-      const password = this.password
-      this.$store.dispatch('login', { email, password })
-        .then(() => this.$router.push('/'))
-        .catch(err => console.log(err))
+    async login () {
+      await this.form.get('api/login/')
+
+      const form = new Form({
+        'username': this.form.email,
+        'password': this.form.password
+      })
+      try {
+        const { data: { token } } = await form.get('/api/login/')
+        this.$store.dispatch('auth/saveToken', { token, remember: true })
+        await this.$store.dispatch('auth/fetchUser')
+        this.$router.push({ name: 'home' })
+      } catch (e) {
+        console.log('error: ', e)
+      }
     }
   }
 }
