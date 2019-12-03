@@ -3,7 +3,26 @@ import Vuex from 'vuex'
 
 Vue.use(Vuex)
 
+// Load store modules dynamically
+const requireContext = require.context('./modules', false, /.*\.js$/)
+
+const modules = requireContext.keys()
+  .map(file =>
+    [file.replace(/(^.\/)|(\.js$)/g, ''), requireContext(file)]
+  )
+  .reduce((modules, [name, module]) => {
+    if (module.namespaced === undefined) {
+      module.namespaced = true
+    }
+
+    return { ...modules, [name]: module }
+  }, {})
+
 export default new Vuex.Store({
+  modules
+})
+
+/* export default new Vuex.Store({
   state: {
     status: '',
     token: localStorage.getItem('token') || '',
@@ -16,4 +35,4 @@ export default new Vuex.Store({
   },
   modules: {
   }
-})
+}) */
