@@ -31,20 +31,5 @@ class User(AbstractBaseUser, PermissionsMixin):
     def get_fullname(self):
         return '%s %s' % (self.first_name, self.last_name)
 
-    # @property
-    # def is_staff(self):
-    #     "Is the user a member of staff?"
-    #     return False
-
-    # @property
-    # def is_superuser(self):
-    #     "Is the user a admin member?"
-    #     return False
-
     class Meta:
         db_table = 'users'
-
-    # @property
-    # def is_active(self):
-    #     "Is the user active?"
-    #     return self.active
