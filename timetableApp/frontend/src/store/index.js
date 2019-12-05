@@ -26,12 +26,16 @@ export default new Vuex.Store({
   state: {
     status: '',
     token: localStorage.getItem('token') || '',
+
+    cookieContext: { favorites: [] },
+    currentUser: { isAuth: false },
+    currentDomain: null,
+    loadUser: false,
     user: {}
   },
   mutations: {
   },
   actions: {
-    // login({commit}, user)
   },
   modules: {
   }

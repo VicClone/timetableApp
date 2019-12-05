@@ -22,6 +22,10 @@ load_dotenv(dotenv_path=ENV_PATH)
 
 AUTH_USER_MODEL = 'core.User'
 
+AUTHENTICATION_BACKENDS = (
+    ('django.contrib.auth.backends.ModelBackend'),
+)
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/2.2/howto/deployment/checklist/
 

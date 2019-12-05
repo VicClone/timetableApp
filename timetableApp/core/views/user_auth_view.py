@@ -13,8 +13,8 @@ class UserAuthView(ObtainAuthToken):
             context={'request': request}
         )
         if serializer.is_valid():
-            user = serializer.validated_data('user')
-            token, created = Token.object.get_or_create(user=user)
+            user = serializer.validated_data['user']
+            token, created = Token.objects.get_or_create(user=user)
             return Response({'token': token.key})
         else:
             return Response({

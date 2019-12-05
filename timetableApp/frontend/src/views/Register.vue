@@ -64,7 +64,7 @@ export default {
     })
   }),
   methods: {
-    /* async register () {
+    async register () {
       await this.form.post('api/register/')
 
       const form = new Form({
@@ -79,18 +79,6 @@ export default {
       } catch (e) {
         console.log('error: ', e)
       }
-    } */
-    register () {
-      this.$http.post('api/register/', this.form).then(resp => {
-        // this.$refs.loginform.reset()
-        console.log(resp.data)
-        // this.$store.dispatch('auth/saveToken', { token, remember: true })
-        // this.$cookie.set('remember', this.loginForm.remember, { expires: '1M' })
-        // this.successCallback(resp.data)
-      }).catch(err => {
-        console.log('error', err)
-        // this.msgs = this.msgsInContextHandler(err, 'loginForm')
-      })
     }
   }
 }

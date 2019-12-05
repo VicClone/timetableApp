@@ -7,6 +7,7 @@
     <v-btn color="blue">
       <router-link :to="{name: 'register'}">Register</router-link>
     </v-btn>
+    {{ getAuth() }}
   </div>
 </template>
 
@@ -17,6 +18,12 @@
 export default {
   name: 'home',
   components: {
+  },
+  methods: {
+    getAuth () {
+      // console.log(this.$store)
+      return this.$store.getters['auth/check']
+    }
   }
 }
 </script>

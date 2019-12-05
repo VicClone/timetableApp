@@ -26,6 +26,9 @@ export default {
       return this.$store.getters.isAuth
     }
   },
+  mounted () {
+    this.$store.dispatch('auth/fetchUser')
+  },
 
   methods: {
     logout () {
