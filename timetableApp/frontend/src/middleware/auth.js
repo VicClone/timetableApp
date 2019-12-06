@@ -1,9 +1,7 @@
-/* import store from '~/store'
-
-export default (to, from, next) => {
+export default function auth ({ next, store }) {
   if (!store.getters['auth/check']) {
-    next({ name: 'login' })
+    return next({ name: 'login' })
   } else {
-    next()
+    return next()
   }
-} */
+}

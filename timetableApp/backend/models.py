@@ -1,5 +1,6 @@
 import uuid
 from django.db import models
+from timetableApp.core.models import User
 # Create your models here.
 
 
@@ -55,16 +56,44 @@ class Group(models.Model):
         verbose_name_plural = "Группы"
 
 
+class TimeLesson(models.Model):
+    """ Модель звонков """
+
+    tid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    number = models.IntegerField(verbose_name="Номер занятия")
+    start = models.TimeField(verbose_name="Начало")
+    end = models.TimeField(verbose_name="Конец")
+    breaks = models.IntegerField(verbose_name="Перерыв")
+    day_week = models.IntegerField(verbose_name="День недели")
+
+    class Meta:
+        verbose_name = "Звонок"
+        verbose_name_plural = "Звонки"
+
+
 class Lesson(models.Model):
     """ Модель занятия """
 
     lid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    lesson_number = models.IntegerField(verbose_name="Номер занятия")
+    number = models.IntegerField(verbose_name="Номер", default=0)
     group = models.ForeignKey(Group, verbose_name="Группа", on_delete=models.CASCADE)
-    teacher = models.ForeignKey(Teacher, verbose_name="Преподаватель", on_delete=models.CASCADE, )
-    day = models.IntegerField(verbose_name="День")
-    data = models.DateField(verbose_name="дата создания", auto_now_add=True)
+    teacher = models.ForeignKey(Teacher, verbose_name="Преподаватель", on_delete=models.CASCADE)
+    time = models.ForeignKey(TimeLesson, verbose_name="Звонок", on_delete=models.CASCADE, null="True")
 
     class Meta:
         verbose_name = "Занятие"
         verbose_name_plural = "Занятия"
+
+
+class Shedule(models.Model):
+    """ Модель расписание """
+
+    sid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, verbose_name="Владелец", on_delete=models.CASCADE, null=True)
+    name = models.CharField(verbose_name="Название", max_length=50)
+    lessons = models.ManyToManyField(Lesson, verbose_name="Уроки", related_name="shedule_lesson")
+    date = models.DateField(verbose_name="дата создания", auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Расписание"
+        verbose_name_plural = "Расписания"

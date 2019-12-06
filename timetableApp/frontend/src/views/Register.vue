@@ -72,6 +72,7 @@ export default {
         'password': this.form.password
       })
       try {
+        console.log('try register')
         const { data: { token } } = await form.post('/api/login/')
         this.$store.dispatch('auth/saveToken', { token, remember: true })
         await this.$store.dispatch('auth/fetchUser')

@@ -20,6 +20,7 @@ from django.conf.urls import url, include
 
 urlpatterns = [
     url('^api/', include('timetableApp.core.urls')),
+    url('^api/', include('timetableApp.backend.urls')),
 
     path('admin/', admin.site.urls),
     # url('^$', index)

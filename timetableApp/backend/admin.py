@@ -1,16 +1,12 @@
 from django.contrib import admin
-from .models import Lesson
-from .models import Auditurium
-from .models import Discipline
-from .models import Teacher
-from .models import Group
+from .models import *
 
 # Register your models here.
 
 class LessonAdmin(admin.ModelAdmin):
     """ Занятие """
 
-    list_display = ('lesson_number', 'group', 'teacher', 'day')
+    list_display = ('number', 'time', 'group', 'teacher')
 
 admin.site.register(Lesson, LessonAdmin)
 
@@ -44,3 +40,23 @@ class GroupAdmin(admin.ModelAdmin):
     list_display = ('name', 'workload', 'people_count')
 
 admin.site.register(Group, GroupAdmin)
+
+
+class TimeLessonAdmin(admin.ModelAdmin):
+    """ Время """
+
+    list_display = ('number', 'start', 'end', 'breaks', 'day_week')
+
+admin.site.register(TimeLesson, TimeLessonAdmin)
+
+
+class SheduleAdmin(admin.ModelAdmin):
+    """ Расписание """
+
+    list_display = ('user', 'name', 'shedule_lesson', 'date')
+    
+    def shedule_lesson(self, obj):
+        print(obj.lessons.all())
+        return "\n".join([str(lesson.number) for lesson in obj.lessons.all()])
+
+admin.site.register(Shedule, SheduleAdmin)

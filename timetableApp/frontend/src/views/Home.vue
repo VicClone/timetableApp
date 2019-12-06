@@ -7,6 +7,9 @@
     <v-btn color="blue">
       <router-link :to="{name: 'register'}">Register</router-link>
     </v-btn>
+    <v-btn color="green">
+      <router-link :to="{name: 'profile'}">Register</router-link>
+    </v-btn>
     {{ getAuth() }}
   </div>
 </template>
