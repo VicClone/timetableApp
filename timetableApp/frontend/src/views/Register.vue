@@ -68,7 +68,7 @@ export default {
       await this.form.post('api/register/')
 
       const form = new Form({
-        'username': this.form.email,
+        'username': this.form.login,
         'password': this.form.password
       })
       try {
