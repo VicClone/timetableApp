@@ -53,10 +53,11 @@ admin.site.register(TimeLesson, TimeLessonAdmin)
 class SheduleAdmin(admin.ModelAdmin):
     """ Расписание """
 
-    list_display = ('user', 'name', 'shedule_lesson', 'date')
+    list_display = ('user', 'fourth', 'period', 'date')
+    # list_display = ('user', 'name', 'shedule_lesson', 'date')
     
-    def shedule_lesson(self, obj):
-        print(obj.lessons.all())
-        return "\n".join([str(lesson.number) for lesson in obj.lessons.all()])
+    # def shedule_lesson(self, obj):
+    #     print(obj.lessons.all())
+    #     return "\n".join([str(lesson.number) for lesson in obj.lessons.all()])
 
 admin.site.register(Shedule, SheduleAdmin)

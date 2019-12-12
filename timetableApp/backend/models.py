@@ -71,6 +71,20 @@ class TimeLesson(models.Model):
         verbose_name_plural = "Звонки"
 
 
+class Shedule(models.Model):
+    """ Модель расписание """
+
+    sid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, verbose_name="Владелец", on_delete=models.CASCADE, null=True)
+    fourth = models.IntegerField(verbose_name="Четверть", default=0)
+    period = models.CharField(verbose_name="Период", default='None', max_length=10)
+    date = models.DateField(verbose_name="дата создания", auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Расписание"
+        verbose_name_plural = "Расписания"
+
+
 class Lesson(models.Model):
     """ Модель занятия """
 
@@ -79,21 +93,8 @@ class Lesson(models.Model):
     group = models.ForeignKey(Group, verbose_name="Группа", on_delete=models.CASCADE)
     teacher = models.ForeignKey(Teacher, verbose_name="Преподаватель", on_delete=models.CASCADE)
     time = models.ForeignKey(TimeLesson, verbose_name="Звонок", on_delete=models.CASCADE, null="True")
+    shedule = models.ForeignKey(Shedule, verbose_name="Расписание", on_delete=models.CASCADE, null="True")
 
     class Meta:
         verbose_name = "Занятие"
         verbose_name_plural = "Занятия"
-
-
-class Shedule(models.Model):
-    """ Модель расписание """
-
-    sid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(User, verbose_name="Владелец", on_delete=models.CASCADE, null=True)
-    name = models.CharField(verbose_name="Название", max_length=50)
-    lessons = models.ManyToManyField(Lesson, verbose_name="Уроки", related_name="shedule_lesson")
-    date = models.DateField(verbose_name="дата создания", auto_now_add=True)
-
-    class Meta:
-        verbose_name = "Расписание"
-        verbose_name_plural = "Расписания"

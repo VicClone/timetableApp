@@ -5,15 +5,9 @@ from rest_framework.views import APIView
 
 # Create your views here.
 
-""" from .models import Lesson
-from .serializers import LessonSerializers
-from .models import Teacher
-from .serializers import TeacherSerializers
-from .models import Auditurium
-from .serializers import AudituriumSerializers """
-
 from .models import *
 from .serializers import *
+from timetableApp.core.models import User
 
 class LessonsView(APIView):
     """ Уроки """
@@ -60,17 +54,42 @@ class TimesView(APIView):
 class ShedulesView(APIView):
     """ Расписания """
 
+    permission_classes = [permissions.IsAuthenticated, ]
+
     def get(self, request):
         shedules = Shedule.objects.all()
         serializer = SheduleSerializers(shedules, many=True)
         return Response({"data": serializer.data})
 
-class SheduleUserView(APIView):
+    def post(self, request):
+        shedule = ShedulePostSerializers(data=request.data)
+        if shedule.is_valid():
+            shedule.save(user=request.user)
+            return Response({"status": "Add"})
+        else:
+            return Response({"status": "Error"})
+
+
+class ShedulesUserView(APIView):
     """ Расписание пользователя """
+
+    permission_classes = [permissions.IsAuthenticated, ]
 
     def get(self, request):
         userId = request.GET.get("userId")
-        # print(Shedule.objects)    
-        shedule = Shedule.objects.get(user=userId)
-        serializer = SheduleUserSerializers(shedule)
+        user = User.objects.filter(pk=userId)
+        shedules = Shedule.objects.filter(user=user[0])
+        serializer = SheduleUserSerializers(shedules, many=True)
+        return Response({"data": serializer.data})
+
+
+class SheduleView(APIView):
+    """ Расписания """
+
+    permission_classes = [permissions.IsAuthenticated, ]
+
+    def get(self, request):
+        sheduleId = request.GET.get("sheduleId")
+        shedule = Shedule.objects.filter(sid=sheduleId)
+        serializer = SheduleSerializers(shedule)
         return Response({"data": serializer.data})

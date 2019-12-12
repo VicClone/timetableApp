@@ -3,14 +3,7 @@ from rest_framework import serializers
 from timetableApp.core.serializers import UserSerializer
 
 from .models import *
-
-class LessonSerializers(serializers.ModelSerializer):
-    """ Сериализация занятий """
-
-    class Meta:
-        model = Lesson
-        fields = ('time', 'group', 'teacher')
-
+from timetableApp.core.models import User
 
 class AudituriumSerializers(serializers.ModelSerializer):
     """ Сериализация аудиторий """
@@ -34,6 +27,13 @@ class TeacherSerializers(serializers.ModelSerializer):
     class Meta:
         model = Teacher
         fields = ('name', 'workload', 'discipline', 'auditurium')
+
+# class TeacherPostSerializers(serializers.ModelSerializer):
+#     """ Добавление преподавателей """
+
+#     class Meta:
+#         model = Teacher
+#         fields = ('name', 'workload', 'discipline', 'auditurium')
 
 
 class GroupSerializers(serializers.ModelSerializer):
@@ -59,13 +59,34 @@ class SheduleSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Shedule
-        fields = ('user', 'name', 'lessons', 'date')
+        fields = ('user', 'fourth', 'period', 'date')
+
+class LessonSerializers(serializers.ModelSerializer):
+    """ Сериализация занятий """
+    shedule = SheduleSerializers()
+
+    class Meta:
+        model = Lesson
+        fields = ('time', 'shedule', 'group', 'teacher')
+
 
 class SheduleUserSerializers(serializers.ModelSerializer):
     """ Сериализация расписания """
-    # lessons = LessonSerializers()
-    # user = UserSerializer()
+    user = UserSerializer()
+
+    lessons = serializers.SerializerMethodField()
 
     class Meta:
         model = Shedule
-        fields = ('user', 'name', 'lessons', 'date')
+        fields = ('sid', 'user', 'fourth', 'period', 'date', 'lessons')
+
+    def get_lessons(self, obj):
+        return [LessonSerializers(el).data for el in Lesson.objects.filter(shedule=obj).all()]
+
+
+class ShedulePostSerializers(serializers.ModelSerializer):
+    """ Добавление расписания """
+    
+    class Meta:
+        model = Shedule
+        fields = ('fourth', 'period')

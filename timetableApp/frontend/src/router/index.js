@@ -46,7 +46,7 @@ const routes = [
     } */
   },
   {
-    path: '/shedule',
+    path: '/shedule/:id',
     name: 'shedule',
     component: () => import(/* webpackChunkName: "profile" */ '../views/Shedule.vue')
   }

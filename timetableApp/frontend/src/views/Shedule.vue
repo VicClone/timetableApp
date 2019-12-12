@@ -25,6 +25,14 @@
         <classes></classes>
       </v-col>
     </v-row>
+    <v-row>
+      <v-btn @click="getShedules">Получить расписания для текущего пользователя</v-btn>
+      <div>
+        <pre>{{ this.shedule }}</pre>
+      </div>
+
+      <v-btn @click="addShedule">Добавить расписание</v-btn>
+    </v-row>
   </v-container>
 </template>
 
@@ -74,11 +82,14 @@ export default {
         },
         text: 'Настройки расписания'
       }
-    ]
+    ],
+    shedule: null
   }),
   components: {
     bellRing: () => import('../components/shedule/bellRing'),
     classes: () => import('../components/shedule/classes')
+  },
+  methods: {
   }
 }
 </script>
