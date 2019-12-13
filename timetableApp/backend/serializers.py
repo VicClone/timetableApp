@@ -1,5 +1,4 @@
 from rest_framework import serializers
-# from timetableApp.core.models import User
 from timetableApp.core.serializers import UserSerializer
 
 from .models import *
@@ -44,12 +43,19 @@ class GroupSerializers(serializers.ModelSerializer):
         fields = ('name', 'workload', 'people_count')
 
 
-class TimeLessonSerializers(serializers.ModelSerializer):
+class TimeSerializers(serializers.ModelSerializer):
     """ Сериализация звонков """
 
     class Meta:
         model = TimeLesson
-        fields = ('number', 'start', 'end', 'breaks', 'day_week')
+        fields = ('number', 'start', 'end', 'day_week', 'shedule')
+
+class TimePostSerializers(serializers.ModelSerializer):
+    """ Сериализация добавления звонков """
+
+    class Meta:
+        model = TimeLesson
+        fields = ('number', 'start', 'end', 'day_week')
 
 
 class SheduleSerializers(serializers.ModelSerializer):

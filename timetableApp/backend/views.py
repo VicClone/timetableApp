@@ -46,9 +46,21 @@ class TimesView(APIView):
     """ Звонки """
 
     def get(self, request):
-        times = Time.objects.all()
+        sheduleId = request.GET.get("sheduleId")
+        shedule = Shedule.objects.filter(sid=sheduleId)
+        times = TimeLesson.objects.filter(shedule=shedule[0])
         serializer = TimeSerializers(times, many=True)
         return Response(serializer.data)
+
+    def post(self, request):
+        sheduleId = request.GET.get("sheduleId")
+        shedule = Shedule.objects.filter(sid=sheduleId)
+        time = TimePostSerializers(data=request.data)
+        if time.is_valid():
+            time.save(shedule=shedule[0])
+            return Response({"status": "Add"})
+        else:
+            return Response({"status": "Error"})
 
 
 class ShedulesView(APIView):

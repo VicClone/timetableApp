@@ -45,7 +45,7 @@ admin.site.register(Group, GroupAdmin)
 class TimeLessonAdmin(admin.ModelAdmin):
     """ Время """
 
-    list_display = ('number', 'start', 'end', 'breaks', 'day_week')
+    list_display = ('number', 'start', 'end', 'day_week', 'shedule')
 
 admin.site.register(TimeLesson, TimeLessonAdmin)
 

@@ -35,32 +35,32 @@
     <v-dialog
       v-model="isAddShedule"
       max-width="600">
-        <v-card>
-          <v-card-title>
-            <h3>Добавить расписание</h3>
-          </v-card-title>
-          <v-card-text>
+      <v-card>
+        <v-card-title>
+          <h3>Добавить расписание</h3>
+        </v-card-title>
+        <v-card-text>
+          <v-text-field
+              v-model="formShedule.fourth"
+              label="Номер четверти"
+              outlined>
+            </v-text-field>
             <v-text-field
-                v-model="formShedule.fourth"
-                label="Номер четверти"
-                outlined>
-              </v-text-field>
-              <v-text-field
-                v-model="formShedule.period"
-                label="Учебный период (гг)"
-                outlined>
-              </v-text-field>
-          </v-card-text>
-          <v-card-actions>
-            <v-spacer></v-spacer>
-            <v-btn @click="isAddShedule = false">
-              Отмена
-            </v-btn>
-            <v-btn @click="createShedule">
-              Сохранить
-            </v-btn>
-          </v-card-actions>
-        </v-card>
+              v-model="formShedule.period"
+              label="Учебный период (гг)"
+              outlined>
+            </v-text-field>
+        </v-card-text>
+        <v-card-actions>
+          <v-spacer></v-spacer>
+          <v-btn @click="isAddShedule = false">
+            Отмена
+          </v-btn>
+          <v-btn @click="createShedule">
+            Сохранить
+          </v-btn>
+        </v-card-actions>
+      </v-card>
     </v-dialog>
   </v-container>
 </template>
@@ -87,7 +87,10 @@ export default {
     }
   }),
   created () {
-    this.getShedules()
+    const vw = this
+    setTimeout(function () {
+      vw.getShedules()
+    }, 10)
   },
 
   methods: {

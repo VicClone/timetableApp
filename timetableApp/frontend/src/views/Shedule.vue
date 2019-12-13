@@ -21,17 +21,11 @@
         </v-list>
       </v-col>
       <v-col cols="9">
-        <bell-ring v-if="false"></bell-ring>
-        <classes></classes>
+        <bell-ring
+          :idShedule="sheduleId">
+        </bell-ring>
+        <classes v-if="false"></classes>
       </v-col>
-    </v-row>
-    <v-row>
-      <v-btn @click="getShedules">Получить расписания для текущего пользователя</v-btn>
-      <div>
-        <pre>{{ this.shedule }}</pre>
-      </div>
-
-      <v-btn @click="addShedule">Добавить расписание</v-btn>
     </v-row>
   </v-container>
 </template>
@@ -88,6 +82,11 @@ export default {
   components: {
     bellRing: () => import('../components/shedule/bellRing'),
     classes: () => import('../components/shedule/classes')
+  },
+  computed: {
+    sheduleId () {
+      return this.$route.params.id
+    }
   },
   methods: {
   }

@@ -56,21 +56,6 @@ class Group(models.Model):
         verbose_name_plural = "Группы"
 
 
-class TimeLesson(models.Model):
-    """ Модель звонков """
-
-    tid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    number = models.IntegerField(verbose_name="Номер занятия")
-    start = models.TimeField(verbose_name="Начало")
-    end = models.TimeField(verbose_name="Конец")
-    breaks = models.IntegerField(verbose_name="Перерыв")
-    day_week = models.IntegerField(verbose_name="День недели")
-
-    class Meta:
-        verbose_name = "Звонок"
-        verbose_name_plural = "Звонки"
-
-
 class Shedule(models.Model):
     """ Модель расписание """
 
@@ -83,6 +68,21 @@ class Shedule(models.Model):
     class Meta:
         verbose_name = "Расписание"
         verbose_name_plural = "Расписания"
+
+
+class TimeLesson(models.Model):
+    """ Модель звонков """
+
+    tid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    number = models.IntegerField(verbose_name="Номер занятия")
+    start = models.TimeField(verbose_name="Начало")
+    end = models.TimeField(verbose_name="Конец")
+    day_week = models.IntegerField(verbose_name="День недели")
+    shedule = models.ForeignKey(Shedule, verbose_name="Расписание", on_delete=models.CASCADE, null=True)
+
+    class Meta:
+        verbose_name = "Звонок"
+        verbose_name_plural = "Звонки"
 
 
 class Lesson(models.Model):
