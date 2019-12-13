@@ -18,9 +18,9 @@
   </div>
 </template>
 
-
 <script>
 export default {
+  props: ['idShedule'],
   data: () => ({
     headers: [
       {
@@ -29,27 +29,43 @@ export default {
         sortable: false,
         value: 'name'
       },
-      { text: 'Количество учеников', value: 'count' },
+      { text: 'Количество учеников', value: 'count' }
     ],
     classes: [
       {
         name: '1a',
-        count: '20',
+        count: '20'
       },
       {
         name: '1б',
-        count: '20',
+        count: '20'
       },
       {
         name: '1в',
-        count: '20',
+        count: '20'
       },
       {
         name: '2a',
-        count: '20',
-      },
+        count: '20'
+      }
 
     ]
   }),
+  created () {
+    this.$nextTick(() => {
+      this.getClasses(this.idShedule)
+    })
+  },
+  methods: {
+    getClasses (id) {
+      this.$http.get(`/api/groups?sheduleId=${id}`)
+        .then(response => {
+          console.log(response)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    }
+  }
 }
 </script>

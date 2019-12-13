@@ -17,7 +17,8 @@
                 :to="{
                   name: 'shedule',
                   params: {
-                    id: props.item.link.sid
+                    id: props.item.link.sid,
+                    component: 'times'
                   }
                 }">
                 Открыть

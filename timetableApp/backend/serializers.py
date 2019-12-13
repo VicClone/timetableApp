@@ -40,7 +40,7 @@ class GroupSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Group
-        fields = ('name', 'workload', 'people_count')
+        fields = ('name', 'workload', 'people_count', 'max_lessons', 'max_same_lessons', 'shedule')
 
 
 class TimeSerializers(serializers.ModelSerializer):

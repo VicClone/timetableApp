@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <h1>shedule id - {{ idShedule }}</h1>
+    <h1>Расписание звонков</h1>
     <v-row>
       <v-col xs12>
         <v-data-table

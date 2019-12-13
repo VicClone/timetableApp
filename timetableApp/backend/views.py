@@ -37,7 +37,9 @@ class GroupsView(APIView):
     """ Группы """
 
     def get(self, request):
-        groups = Group.objects.all()
+        sheduleId = request.GET.get("sheduleId")
+        shedule = Shedule.objects.filter(sid=sheduleId)
+        groups = Group.objects.filter(shedule=shedule[0])
         serializer = GroupSerializers(groups, many=True)
         return Response(serializer.data)
 

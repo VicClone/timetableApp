@@ -10,7 +10,13 @@
               :key="i"
             >
               <v-list-item-content>
-                <router-link :to="param.link">
+                <router-link :to="{
+                  name: 'shedule',
+                  params: {
+                    id: sheduleId,
+                    component: param.link.name
+                  }
+                }">
                   <v-list-item-title class="params__text">
                     {{ param.text }}
                   </v-list-item-title>
@@ -22,9 +28,13 @@
       </v-col>
       <v-col cols="9">
         <bell-ring
+          v-if="isCurComp('times')"
           :idShedule="sheduleId">
         </bell-ring>
-        <classes v-if="false"></classes>
+        <classes
+          v-if="isCurComp('classes')"
+          :idShedule="sheduleId">
+        </classes>
       </v-col>
     </v-row>
   </v-container>
@@ -36,13 +46,13 @@ export default {
     params: [
       {
         link: {
-          name: 'home'
+          name: 'times'
         },
         text: 'Звонки'
       },
       {
         link: {
-          name: 'home'
+          name: 'classes'
         },
         text: 'Классы'
       },
@@ -89,6 +99,9 @@ export default {
     }
   },
   methods: {
+    isCurComp (name) {
+      return this.$route.params.component === name
+    }
   }
 }
 </script>

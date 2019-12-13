@@ -37,7 +37,7 @@ admin.site.register(Teacher, TeacherAdmin)
 class GroupAdmin(admin.ModelAdmin):
     """ Группа """
 
-    list_display = ('name', 'workload', 'people_count')
+    list_display = ('name', 'workload', 'people_count', 'max_lessons', 'max_same_lessons', 'shedule')
 
 admin.site.register(Group, GroupAdmin)
 

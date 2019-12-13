@@ -41,12 +41,12 @@ const routes = [
     path: '/profile',
     name: 'profile',
     component: () => import(/* webpackChunkName: "profile" */ '../views/Profile.vue')
-    /* meta: {
-      middleware: [auth]
-    } */
+    // meta: {
+    //   middleware: [auth]
+    // }
   },
   {
-    path: '/shedule/:id',
+    path: '/shedule/:id/:component',
     name: 'shedule',
     component: () => import(/* webpackChunkName: "profile" */ '../views/Shedule.vue')
   }

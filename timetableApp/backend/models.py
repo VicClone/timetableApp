@@ -43,19 +43,6 @@ class Teacher(models.Model):
         verbose_name_plural = "Преподаватели"
 
 
-class Group(models.Model):
-    """ Модель группы """
-
-    gid = models.UUIDField(default=uuid.uuid4, editable=False)
-    name = models.CharField(primary_key=True, verbose_name="Название", max_length=25)
-    workload = models.FloatField(verbose_name="Нагрузка")
-    people_count = models.IntegerField(verbose_name="Количество учащихся")
-
-    class Meta:
-        verbose_name = "Группа"
-        verbose_name_plural = "Группы"
-
-
 class Shedule(models.Model):
     """ Модель расписание """
 
@@ -69,6 +56,21 @@ class Shedule(models.Model):
         verbose_name = "Расписание"
         verbose_name_plural = "Расписания"
 
+
+class Group(models.Model):
+    """ Модель группы """
+
+    gid = models.UUIDField(default=uuid.uuid4, editable=False)
+    name = models.CharField(primary_key=True, verbose_name="Название", max_length=25)
+    workload = models.FloatField(verbose_name="Нагрузка")
+    people_count = models.IntegerField(verbose_name="Количество учащихся"),
+    max_lessons = models.IntegerField(verbose_name="Максимум занятий"),
+    max_same_lessons = models.IntegerField(verbose_name="Максимум одинаковых занятий"),
+    shedule = models.ForeignKey(Shedule, verbose_name="Расписание", on_delete=models.CASCADE, null=True)
+
+    class Meta:
+        verbose_name = "Группа"
+        verbose_name_plural = "Группы"
 
 class TimeLesson(models.Model):
     """ Модель звонков """

@@ -23,11 +23,15 @@ export default {
 
   computed: {
     isAuth () {
-      return this.$store.getters.isAuth
+      return this.$store.getters['auth/check']
     }
   },
   mounted () {
     this.$store.dispatch('auth/fetchUser')
+
+    // this.$nextTick(() => {
+    //   this.checkAuth()
+    // })
   },
 
   methods: {
@@ -36,6 +40,11 @@ export default {
         .then(() => {
           this.$router.push({ name: 'login' })
         })
+    },
+    checkAuth () {
+      if (!this.$store.getters['auth/check']) {
+        this.$router.push({ name: 'home' })
+      }
     }
   }
 }
