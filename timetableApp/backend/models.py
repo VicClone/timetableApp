@@ -15,11 +15,26 @@ class Auditurium(models.Model):
         verbose_name_plural = "Аудитории"
 
 
+class Shedule(models.Model):
+    """ Модель расписание """
+
+    sid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    user = models.ForeignKey(User, verbose_name="Владелец", on_delete=models.CASCADE, null=True)
+    fourth = models.IntegerField(verbose_name="Четверть", default=0)
+    period = models.CharField(verbose_name="Период", default='None', max_length=10)
+    date = models.DateField(verbose_name="дата создания", auto_now_add=True)
+
+    class Meta:
+        verbose_name = "Расписание"
+        verbose_name_plural = "Расписания"
+
+
 class Discipline(models.Model):
     """ Модель дисциплины """
 
     did = models.UUIDField(default=uuid.uuid4, editable=False)
     name = models.CharField(primary_key=True, verbose_name="Название", max_length=25)
+    shedule = models.ForeignKey(Shedule, verbose_name="Расписание", on_delete=models.CASCADE, null=True)
 
     class Meta:
         verbose_name = "Дисциплина"
@@ -43,29 +58,15 @@ class Teacher(models.Model):
         verbose_name_plural = "Преподаватели"
 
 
-class Shedule(models.Model):
-    """ Модель расписание """
-
-    sid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    user = models.ForeignKey(User, verbose_name="Владелец", on_delete=models.CASCADE, null=True)
-    fourth = models.IntegerField(verbose_name="Четверть", default=0)
-    period = models.CharField(verbose_name="Период", default='None', max_length=10)
-    date = models.DateField(verbose_name="дата создания", auto_now_add=True)
-
-    class Meta:
-        verbose_name = "Расписание"
-        verbose_name_plural = "Расписания"
-
-
 class Group(models.Model):
     """ Модель группы """
 
     gid = models.UUIDField(default=uuid.uuid4, editable=False)
     name = models.CharField(primary_key=True, verbose_name="Название", max_length=25)
     workload = models.FloatField(verbose_name="Нагрузка")
-    people_count = models.IntegerField(verbose_name="Количество учащихся"),
-    max_lessons = models.IntegerField(verbose_name="Максимум занятий"),
-    max_same_lessons = models.IntegerField(verbose_name="Максимум одинаковых занятий"),
+    people_count = models.IntegerField(verbose_name="Количество учащихся", default=0)
+    max_lessons = models.IntegerField(verbose_name="Максимум занятий", default=0)
+    max_repeat_lessons = models.IntegerField(verbose_name="Максимум одинаковых занятий", default=0)
     shedule = models.ForeignKey(Shedule, verbose_name="Расписание", on_delete=models.CASCADE, null=True)
 
     class Meta:

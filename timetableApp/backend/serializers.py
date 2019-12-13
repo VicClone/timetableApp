@@ -17,6 +17,13 @@ class DisciplineSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Discipline
+        fields = ('name', 'shedule')
+
+class DisciplinePostSerializers(serializers.ModelSerializer):
+    """ Сериализация дисциплин """
+
+    class Meta:
+        model = Discipline
         fields = ('name',)
 
 
@@ -40,7 +47,14 @@ class GroupSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Group
-        fields = ('name', 'workload', 'people_count', 'max_lessons', 'max_same_lessons', 'shedule')
+        fields = ('name', 'workload', 'people_count', 'max_lessons', 'max_repeat_lessons', 'shedule')
+
+class GroupPostSerializers(serializers.ModelSerializer):
+    """ Сериализация групп """
+
+    class Meta:
+        model = Group
+        fields = ('name', 'workload', 'people_count', 'max_lessons', 'max_repeat_lessons')
 
 
 class TimeSerializers(serializers.ModelSerializer):

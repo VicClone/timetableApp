@@ -33,6 +33,28 @@ class AudituriumsView(APIView):
         serializer = AudituriumSerializers(audituriums, many=True)
         return Response(serializer.data)
 
+
+class DisciplineView(APIView):
+    """ Дисциплины """
+
+    def get(self, request):
+        sheduleId = request.GET.get("sheduleId")
+        shedule = Shedule.objects.filter(sid=sheduleId)
+        disciplines = Discipline.objects.filter(shedule=shedule[0])
+        serializer = DisciplineSerializers(disciplines, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        sheduleId = request.GET.get("sheduleId")
+        shedule = Shedule.objects.filter(sid=sheduleId)
+        discipline = DisciplinePostSerializers(data=request.data)
+        if discipline.is_valid():
+            discipline.save(shedule=shedule[0])
+            return Response({"status": "Add"})
+        else:
+            return Response({"status": "Error"})
+
+
 class GroupsView(APIView):
     """ Группы """
 
@@ -42,6 +64,16 @@ class GroupsView(APIView):
         groups = Group.objects.filter(shedule=shedule[0])
         serializer = GroupSerializers(groups, many=True)
         return Response(serializer.data)
+
+    def post(self, request):
+        sheduleId = request.GET.get("sheduleId")
+        shedule = Shedule.objects.filter(sid=sheduleId)
+        group = GroupPostSerializers(data=request.data)
+        if group.is_valid():
+            group.save(shedule=shedule[0])
+            return Response({"status": "Add"})
+        else:
+            return Response({"status": "Error"})
 
 
 class TimesView(APIView):
