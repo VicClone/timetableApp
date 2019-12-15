@@ -1,14 +1,14 @@
 <template>
   <div class="home">
-    <h1>Home page</h1>
+    <h1>Генератор расписание</h1>
     <v-btn color="red">
       <router-link :to="{name: 'login'}">Login</router-link>
     </v-btn>
-    <v-btn color="blue">
+    <v-btn color="blue" v-if="!getAuth()">
       <router-link :to="{name: 'register'}">Register</router-link>
     </v-btn>
-    <v-btn color="green">
-      <router-link :to="{name: 'profile'}">Register</router-link>
+    <v-btn color="green" v-if="getAuth()">
+      <router-link :to="{name: 'profile'}">Profile</router-link>
     </v-btn>
     {{ getAuth() }}
   </div>

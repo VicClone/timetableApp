@@ -34,11 +34,6 @@
               outlined>
             </v-text-field>
             <v-text-field
-              v-model="formClass.workload"
-              label="Нагрузка"
-              outlined>
-            </v-text-field>
-            <v-text-field
               v-model="formClass.maxLessons"
               label="Максимум уроков"
               outlined>
@@ -75,7 +70,6 @@ export default {
         value: 'name'
       },
       { text: 'Количество учеников', value: 'count' },
-      { text: 'Нагрузка', value: 'workload' },
       { text: 'Максимум уроков', value: 'maxLessons' },
       { text: 'Максимум повторяющихся уроков', value: 'maxRepeatLessons' }
     ],
@@ -83,7 +77,6 @@ export default {
     formClass: {
       name: '',
       count: '',
-      workload: '',
       maxLessons: '',
       maxRepeatLessons: ''
     },

@@ -39,6 +39,10 @@
           v-if="isCurComp('subjects')"
           :idShedule="sheduleId">
         </subjects>
+        <teachers
+          v-if="isCurComp('teachers')"
+          :idShedule="sheduleId">
+        </teachers>
       </v-col>
     </v-row>
   </v-container>
@@ -74,7 +78,7 @@ export default {
       },
       {
         link: {
-          name: 'home'
+          name: 'teachers'
         },
         text: 'Учителя'
       },
@@ -96,7 +100,8 @@ export default {
   components: {
     bellRing: () => import('../components/shedule/bellRing'),
     classes: () => import('../components/shedule/classes'),
-    subjects: () => import('../components/shedule/subjects')
+    subjects: () => import('../components/shedule/subjects'),
+    teachers: () => import('../components/shedule/teachers')
 
   },
   computed: {

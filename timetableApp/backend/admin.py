@@ -10,12 +10,21 @@ class LessonAdmin(admin.ModelAdmin):
 
 admin.site.register(Lesson, LessonAdmin)
 
+
 class AudituriumAdmin(admin.ModelAdmin):
     """ Аудитория """
 
-    list_display = ('name', 'address')
+    list_display = ('name', 'address', 'capacity')
 
 admin.site.register(Auditurium, AudituriumAdmin)
+
+
+class AudituriumScheduleAdmin(admin.ModelAdmin):
+    """ Расписания аудиторий """
+
+    list_display = ('auditurium', 'lesson_time', 'business')
+
+admin.site.register(AudituriumSchedule, AudituriumScheduleAdmin)
 
 
 class DisciplineAdmin(admin.ModelAdmin):
@@ -29,17 +38,41 @@ admin.site.register(Discipline, DisciplineAdmin)
 class TeacherAdmin(admin.ModelAdmin):
     """ Преподаватель """
 
-    list_display = ('name', 'workload', 'discipline', 'auditurium')
+    list_display = ('name', 'discipline', 'shedule')
 
 admin.site.register(Teacher, TeacherAdmin)
+
+
+class TeacherScheduleAdmin(admin.ModelAdmin):
+    """ Преподаватель """
+
+    list_display = ('teacher', 'lesson_time', 'business')
+
+admin.site.register(TeacherSchedule, TeacherScheduleAdmin)
 
 
 class GroupAdmin(admin.ModelAdmin):
     """ Группа """
 
-    list_display = ('name', 'workload', 'people_count', 'max_lessons', 'max_repeat_lessons', 'shedule')
+    list_display = ('name', 'people_count', 'max_lessons', 'max_repeat_lessons', 'shedule')
 
 admin.site.register(Group, GroupAdmin)
+
+
+class GroupSheduleAdmin(admin.ModelAdmin):
+    """ Расписание группы """
+
+    list_display = ('group', 'lesson_time', 'business')
+
+admin.site.register(GroupShedule, GroupSheduleAdmin)
+
+
+class GroupWorkloadAdmin(admin.ModelAdmin):
+    """ Занятость группы """
+
+    list_display = ('group', 'discipline', 'amount')
+
+admin.site.register(GroupWorkload, GroupWorkloadAdmin)
 
 
 class TimeLessonAdmin(admin.ModelAdmin):

@@ -9,7 +9,14 @@ class AudituriumSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Auditurium
-        fields = ('name', 'address')
+        fields = ('name', 'address', 'capacity')
+
+class AudituriumScheduleSerializers(serializers.ModelSerializer):
+    """ Сериализация расписаний аудиторий """
+
+    class Meta:
+        model = Auditurium
+        fields = ('auditurium', 'lesson_time', 'business')
 
 
 class DisciplineSerializers(serializers.ModelSerializer):
@@ -27,19 +34,28 @@ class DisciplinePostSerializers(serializers.ModelSerializer):
         fields = ('name',)
 
 
-class TeacherSerializers(serializers.ModelSerializer):
+class TeachersSerializers(serializers.ModelSerializer):
     """ Сериализация преподавателей """
 
     class Meta:
         model = Teacher
-        fields = ('name', 'workload', 'discipline', 'auditurium')
+        fields = ('name', 'discipline', 'shedule')
 
-# class TeacherPostSerializers(serializers.ModelSerializer):
-#     """ Добавление преподавателей """
 
-#     class Meta:
-#         model = Teacher
-#         fields = ('name', 'workload', 'discipline', 'auditurium')
+class TeacherPostSerializers(serializers.ModelSerializer):
+    """ Добавление преподавателей """
+
+    class Meta:
+        model = Teacher
+        fields = ('name', 'discipline')
+
+
+class TeachersSerializers(serializers.ModelSerializer):
+    """ Сериализация расписания преподавателей """
+
+    class Meta:
+        model = TeacherSchedule
+        fields = ('teacher', 'lesson_time', 'business')
 
 
 class GroupSerializers(serializers.ModelSerializer):
@@ -47,14 +63,30 @@ class GroupSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Group
-        fields = ('name', 'workload', 'people_count', 'max_lessons', 'max_repeat_lessons', 'shedule')
+        fields = ('name', 'people_count', 'max_lessons', 'max_repeat_lessons', 'shedule')
 
 class GroupPostSerializers(serializers.ModelSerializer):
     """ Сериализация групп """
 
     class Meta:
         model = Group
-        fields = ('name', 'workload', 'people_count', 'max_lessons', 'max_repeat_lessons')
+        fields = ('name', 'people_count', 'max_lessons', 'max_repeat_lessons')
+
+
+class GroupSheduleSerializers(serializers.ModelSerializer):
+    """ Сериализация расписания групп """
+
+    class Meta:
+        model = GroupShedule
+        fields = ('group', 'lesson_time', 'business')
+
+
+class GroupWorkloadSerializers(serializers.ModelSerializer):
+    """ Сериализация расписания групп """
+
+    class Meta:
+        model = GroupWorkload
+        fields = ('group', 'discipline', 'amount')
 
 
 class TimeSerializers(serializers.ModelSerializer):

@@ -1,6 +1,6 @@
 <template>
   <v-container>
-    <v-row>
+    <v-row justify="center">
       <v-col cols="12" sm="6">
         <h2>Регистрация</h2>
         <v-form>
@@ -32,16 +32,20 @@
             <v-text-field
               label="Пароль"
               name="password"
+              type="password"
               outlined
               v-model="form.password">
             </v-text-field>
             <v-text-field
               label="Повторите пароль"
               name="passwordConfirm"
+              type="password"
               outlined
               v-model="form.password_confirmation">
             </v-text-field>
-            <v-btn @click="register">Зарегистрироваться</v-btn>
+            <v-row justify="center">
+              <v-btn @click="register">Зарегистрироваться</v-btn>
+            </v-row>
           </v-col>
         </v-form>
       </v-col>
