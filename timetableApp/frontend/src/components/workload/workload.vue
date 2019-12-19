@@ -1,35 +1,28 @@
 <template>
   <div>
+    {{ idClass }}
     <v-row>
       <v-col cols="12">
         <v-data-table
           :headers="headers"
-          :items="teachers"
+          :items="workloads"
           :items-per-page="5"
           class="elevation-1"
-        >
-        </v-data-table>
+        ></v-data-table>
         <v-row no-gutters justify="end">
           <div style="margin-top: 10px;">
-            <v-btn @click="isAddTeachers = true">Добавить учителя</v-btn>
+            <v-btn @click="isAddWorkload = true">Добавить нагрузку</v-btn>
           </div>
         </v-row>
       </v-col>
     </v-row>
     <v-dialog
-      v-model="isAddTeachers"
+      v-model="isAddWorkload"
       max-width="600">
       <v-card>
         <v-card-title>
-          <h3>Добавить учителя</h3>
+          <h3>Добавить нагрузку</h3>
         </v-card-title>
-        <v-card-text>
-          <v-text-field
-            v-model="formTeacher.name"
-            label="Имя"
-            outlined>
-          </v-text-field>
-        </v-card-text>
         <v-card-text>
           <v-autocomplete
             v-if="subjects && subjects.length > 0"
@@ -41,12 +34,19 @@
             outlined
           ></v-autocomplete>
         </v-card-text>
+        <v-card-text>
+          <v-text-field
+            v-model="formWorkload.amount"
+            label="Количество"
+            outlined>
+          </v-text-field>
+        </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="isAddTeachers = false">
+          <v-btn @click="isAddWorkload = false">
             Отмена
           </v-btn>
-          <v-btn @click="addTeacher(idShedule, subValue)">
+          <v-btn @click="addWorkload(idClass, subValue)">
             Сохранить
           </v-btn>
         </v-card-actions>
@@ -57,39 +57,70 @@
 
 <script>
 export default {
-  props: ['idShedule'],
+  props: ['idClass', 'idShedule'],
 
   data: () => ({
     headers: [
       {
-        text: 'Имя преподавателя',
+        text: 'Название предмета',
         align: 'left',
+        sortable: false,
         value: 'name'
       },
-      { text: 'Предмет', value: 'subject' }
+      { text: 'Нагрузка', value: 'amount' }
     ],
-    teachers: [],
+    workloads: [],
     subjects: [],
     subValue: null,
-    formTeacher: {
-      name: ''
-    },
-    isAddTeachers: false
+    group: null,
+    isAddWorkload: false,
+    formWorkload: {
+      amount: ''
+    }
   }),
 
   created () {
     this.$nextTick(() => {
       this.getSubjects(this.idShedule)
-    })
-    this.$nextTick(() => {
-      this.getTeacher(this.idShedule)
+      this.getWorkloads(this.idClass)
     })
   },
 
   methods: {
+    getWorkloads (id) {
+      const vm = this
+      this.$http.get(`/api/workloadGroups?groupId=${id}`)
+        .then(response => {
+          console.log(response, 'workgroup')
+          this.workloads = response.data.map(workloadData => {
+            return {
+              name: vm.getNameSub(workloadData.discipline),
+              amount: workloadData.amount
+            }
+          })
+        })
+        .catch(error => {
+          console.log(error)
+        })
+    },
+    addWorkload (idGroup, idSub) {
+      this.$http.post(`/api/workloadGroups?groupId=${idGroup}&disciplineId=${idSub}`, {
+        amount: this.formWorkload.amount
+      })
+        .then(response => {
+          this.getWorkloads(idGroup)
+        })
+        .catch(error => {
+          console.log(error)
+        })
+        .finally(() => {
+          this.isAddWorkload = false
+        })
+    },
     getSubjects (id) {
       this.$http.get(`/api/subjects?sheduleId=${id}`)
         .then(response => {
+          console.log(response)
           this.subjects = response.data.map(subjectsData => {
             return {
               id: subjectsData.did,
@@ -99,36 +130,6 @@ export default {
         })
         .catch(error => {
           console.log(error)
-        })
-    },
-    getTeacher (id) {
-      this.$http.get(`/api/teachers?sheduleId=${id}`)
-        .then(response => {
-          console.log(response, 'teacher')
-          this.teachers = response.data.map(teacherData => {
-            return {
-              name: teacherData.name,
-              subject: this.getNameSub(teacherData.discipline)
-            }
-          })
-        })
-        .catch(error => {
-          console.log(error)
-        })
-    },
-    addTeacher (sheduleId, disciplineId) {
-      this.$http.post(
-        `/api/teachers?sheduleId=${sheduleId}&disciplineId=${disciplineId}`,
-        { name: this.formTeacher.name }
-      )
-        .then(response => {
-          console.log(response)
-        })
-        .catch(error => {
-          console.log(error)
-        })
-        .finally(() => {
-          this.isAddTeachers = false
         })
     },
     getNameSub (id) {

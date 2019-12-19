@@ -91,12 +91,10 @@ export default {
     getClasses (id) {
       this.$http.get(`/api/groups?sheduleId=${id}`)
         .then(response => {
-          console.log(response)
           this.classes = response.data.map(classData => {
             return {
               name: classData.name,
               count: classData.people_count,
-              workload: classData.workload,
               maxLessons: classData.max_lessons,
               maxRepeatLessons: classData.max_repeat_lessons
             }

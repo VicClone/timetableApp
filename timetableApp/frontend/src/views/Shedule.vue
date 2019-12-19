@@ -43,6 +43,14 @@
           v-if="isCurComp('teachers')"
           :idShedule="sheduleId">
         </teachers>
+        <bussiness-teacher
+          v-if="isCurComp('teachersShedule')"
+          :idShedule="sheduleId">
+        </bussiness-teacher>
+        <group-workload
+          v-if="isCurComp('groupworkload')"
+          :idShedule="sheduleId"  >
+        </group-workload>
       </v-col>
     </v-row>
   </v-container>
@@ -72,7 +80,7 @@ export default {
       },
       {
         link: {
-          name: 'home'
+          name: 'groupworkload'
         },
         text: 'Нагрузка класса по предметам'
       },
@@ -84,9 +92,21 @@ export default {
       },
       {
         link: {
+          name: 'teachersShedule'
+        },
+        text: 'Расписания учителей'
+      },
+      {
+        link: {
           name: 'home'
         },
         text: 'Кабинеты'
+      },
+      {
+        link: {
+          name: 'auditoriumShedule'
+        },
+        text: 'Расписания кабинетов'
       },
       {
         link: {
@@ -101,8 +121,9 @@ export default {
     bellRing: () => import('../components/shedule/bellRing'),
     classes: () => import('../components/shedule/classes'),
     subjects: () => import('../components/shedule/subjects'),
-    teachers: () => import('../components/shedule/teachers')
-
+    teachers: () => import('../components/shedule/teachers'),
+    groupWorkload: () => import('../components/shedule/groupWorkload'),
+    bussinessTeacher: () => import('../components/bussiness/bussinessTeacher')
   },
   computed: {
     sheduleId () {

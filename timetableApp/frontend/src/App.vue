@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-content>
-      <v-btn v-if="isAuth" @click="logout">Выйти</v-btn>
+      <!-- <v-btn v-if="isAuth" @click="logout">Выйти</v-btn> -->
       <router-view/>
     </v-content>
   </v-app>
@@ -22,9 +22,9 @@ export default {
   }),
 
   computed: {
-    isAuth () {
-      return this.$store.getters['auth/check']
-    }
+    // isAuth () {
+    //   return this.$store.getters['auth/check']
+    // }
   },
   mounted () {
     this.$store.dispatch('auth/fetchUser')

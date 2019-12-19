@@ -24,7 +24,7 @@ class DisciplineSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Discipline
-        fields = ('name', 'shedule')
+        fields = ('did', 'name', 'shedule')
 
 class DisciplinePostSerializers(serializers.ModelSerializer):
     """ Сериализация дисциплин """
@@ -47,10 +47,10 @@ class TeacherPostSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Teacher
-        fields = ('name', 'discipline')
+        fields = ('name',)
 
 
-class TeachersSerializers(serializers.ModelSerializer):
+class TeacherSchedulesSerializers(serializers.ModelSerializer):
     """ Сериализация расписания преподавателей """
 
     class Meta:
@@ -63,7 +63,7 @@ class GroupSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Group
-        fields = ('name', 'people_count', 'max_lessons', 'max_repeat_lessons', 'shedule')
+        fields = ('gid', 'name', 'people_count', 'max_lessons', 'max_repeat_lessons', 'shedule')
 
 class GroupPostSerializers(serializers.ModelSerializer):
     """ Сериализация групп """
@@ -82,11 +82,18 @@ class GroupSheduleSerializers(serializers.ModelSerializer):
 
 
 class GroupWorkloadSerializers(serializers.ModelSerializer):
-    """ Сериализация расписания групп """
+    """ Сериализация нагрузки групп """
 
     class Meta:
         model = GroupWorkload
         fields = ('group', 'discipline', 'amount')
+
+class GroupWorkloadPostSerializers(serializers.ModelSerializer):
+    """ Добавление нагрузки групп """
+
+    class Meta:
+        model = GroupWorkload
+        fields = ('amount',)
 
 
 class TimeSerializers(serializers.ModelSerializer):

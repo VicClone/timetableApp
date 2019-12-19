@@ -21,8 +21,8 @@ class Shedule(models.Model):
 class Discipline(models.Model):
     """ Модель дисциплины """
 
-    did = models.UUIDField(default=uuid.uuid4, editable=False)
-    name = models.CharField(primary_key=True, verbose_name="Название", max_length=25)
+    did = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(verbose_name="Название", max_length=100)
     shedule = models.ForeignKey(Shedule, verbose_name="Расписание", on_delete=models.CASCADE, null=True)
 
     class Meta:
@@ -77,8 +77,8 @@ class Teacher(models.Model):
     discipline = models.ForeignKey(Discipline, verbose_name="Профиль", on_delete = models.CASCADE)
     shedule = models.ForeignKey(Shedule, verbose_name="Расписание", on_delete=models.CASCADE, null=True)
 
-    def __str__(self):
-        return self.name
+    # def __str__(self):
+    #     return self.name
 
     class Meta:
         verbose_name = "Преподаватель"
@@ -101,8 +101,8 @@ class TeacherSchedule(models.Model):
 class Group(models.Model):
     """ Модель группы """
 
-    gid = models.UUIDField(default=uuid.uuid4, editable=False)
-    name = models.CharField(primary_key=True, verbose_name="Название", max_length=25)
+    gid = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(verbose_name="Название", max_length=25)
     people_count = models.IntegerField(verbose_name="Количество учащихся", default=0)
     max_lessons = models.IntegerField(verbose_name="Максимум занятий", default=0)
     max_repeat_lessons = models.IntegerField(verbose_name="Максимум одинаковых занятий", default=0)

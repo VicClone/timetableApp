@@ -24,7 +24,7 @@ class TeachersView(APIView):
         sheduleId = request.GET.get("sheduleId")
         shedule = Shedule.objects.filter(sid=sheduleId)
         teachers = Teacher.objects.filter(shedule=shedule[0])
-        serializer = TeachersSerializers(disciplines, many=True)
+        serializer = TeachersSerializers(teachers, many=True)
         return Response(serializer.data)
 
     def post(self, request):
@@ -85,6 +85,29 @@ class GroupsView(APIView):
         group = GroupPostSerializers(data=request.data)
         if group.is_valid():
             group.save(shedule=shedule[0])
+            return Response({"status": "Add"})
+        else:
+            return Response({"status": "Error"})
+
+
+class GroupWorkloadView(APIView):
+    """ Нагрузка группы """
+
+    def get(self, request):
+        groupId = request.GET.get("groupId")
+        group = Group.objects.filter(gid=groupId)
+        workloads = GroupWorkload.objects.filter(group=group[0])
+        serializer = GroupWorkloadSerializers(workloads, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        groupId = request.GET.get("groupId")
+        group = Group.objects.filter(gid=groupId)
+        disciplineId = request.GET.get("disciplineId")
+        discipline = Discipline.objects.filter(did=disciplineId)
+        workload = GroupWorkloadPostSerializers(data=request.data)
+        if workload.is_valid():
+            workload.save(group=group[0], discipline=discipline[0])
             return Response({"status": "Add"})
         else:
             return Response({"status": "Error"})

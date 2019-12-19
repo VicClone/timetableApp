@@ -7,6 +7,7 @@ urlpatterns = [
     url(r'^audituriums', AudituriumsView.as_view()),
     url(r'^times', TimesView.as_view()),
     url(r'^groups', GroupsView.as_view()),
+    url(r'^workloadGroups', GroupWorkloadView.as_view()),
     url(r'^subjects', DisciplineView.as_view()),
     url(r'^teachers', TeachersView.as_view()),
     url(r'^shedules$', ShedulesView.as_view()),
