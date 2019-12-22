@@ -10,7 +10,9 @@ urlpatterns = [
     url(r'^workloadGroups', GroupWorkloadView.as_view()),
     url(r'^subjects', DisciplineView.as_view()),
     url(r'^teachers', TeachersView.as_view()),
+    url(r'^teacherShedule', TeacherShedulesView.as_view()),
     url(r'^shedules$', ShedulesView.as_view()),
     url(r'^shedule$', ShedulesView.as_view()),
-    url(r'^shedulesUser', ShedulesUserView.as_view())
+    url(r'^shedulesUser', ShedulesUserView.as_view()),
+    url(r'^generate', GenerateSheduleView.as_view()),
 ]

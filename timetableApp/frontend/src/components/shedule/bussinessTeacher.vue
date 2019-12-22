@@ -5,31 +5,36 @@
     <v-row>
       <v-col cols="6" xs12 md6>
         <v-autocomplete
-          v-if="classes && classes.length > 0"
-          label="Классы"
+          v-if="teachers &&teachers.length > 0"
+          label="Учителя"
           v-model="value"
-          :items="classes"
+          :items="teachers"
           item-text="name"
           item-value="id"
           outlined
         ></v-autocomplete>
-        <span v-else>Нет классов</span>
+        <span v-else>Нет учителей</span>
       </v-col>
     </v-row>
-    <!-- <v-row v-if="value">
+    <v-row v-if="value">
       <v-col cols="12">
-        <workload
-          :idClass="value"
+        <shedule-teacher
+          :idTeacher="value"
           :idShedule="idShedule">
-        </workload>
+        </shedule-teacher>
       </v-col>
-    </v-row> -->
+    </v-row>
   </v-container>
 </template>
 
 <script>
 export default {
   props: ['idShedule'],
+
+  components: {
+    sheduleTeacher: () => import('@/components/personalShedule/sheduleTeacher')
+  },
+
   data: () => ({
     teachers: [],
     value: null
@@ -42,22 +47,28 @@ export default {
     })
   },
 
+  watch: {
+    value (val) {
+      console.log(val)
+    }
+  },
+
   methods: {
-    getTeacher (id) {
+    getTeachers (id) {
       this.$http.get(`/api/teachers?sheduleId=${id}`)
         .then(response => {
           console.log(response, 'teacher')
           this.teachers = response.data.map(teacherData => {
             return {
-              name: teacherData.name,
-              subject: this.getNameSub(teacherData.discipline)
+              id: teacherData.tid,
+              name: teacherData.name
             }
           })
         })
         .catch(error => {
           console.log(error)
         })
-    },
+    }
   }
 }
 </script>

@@ -1,6 +1,5 @@
 <template>
   <div>
-    {{ idClass }}
     <v-row>
       <v-col cols="12">
         <v-data-table

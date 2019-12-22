@@ -9,7 +9,15 @@ class AudituriumSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Auditurium
-        fields = ('name', 'address', 'capacity')
+        fields = ('name', 'capacity')
+
+
+class AudituriumPostSerializers(serializers.ModelSerializer):
+    """ Сериализация аудиторий """
+
+    class Meta:
+        model = Auditurium
+        fields = ('name', 'capacity')
 
 class AudituriumScheduleSerializers(serializers.ModelSerializer):
     """ Сериализация расписаний аудиторий """
@@ -39,7 +47,7 @@ class TeachersSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = Teacher
-        fields = ('name', 'discipline', 'shedule')
+        fields = ('tid', 'name', 'discipline', 'shedule')
 
 
 class TeacherPostSerializers(serializers.ModelSerializer):
@@ -48,14 +56,6 @@ class TeacherPostSerializers(serializers.ModelSerializer):
     class Meta:
         model = Teacher
         fields = ('name',)
-
-
-class TeacherSchedulesSerializers(serializers.ModelSerializer):
-    """ Сериализация расписания преподавателей """
-
-    class Meta:
-        model = TeacherSchedule
-        fields = ('teacher', 'lesson_time', 'business')
 
 
 class GroupSerializers(serializers.ModelSerializer):
@@ -101,7 +101,7 @@ class TimeSerializers(serializers.ModelSerializer):
 
     class Meta:
         model = TimeLesson
-        fields = ('number', 'start', 'end', 'day_week', 'shedule')
+        fields = ('number', 'start', 'end', 'shedule')
 
 class TimePostSerializers(serializers.ModelSerializer):
     """ Сериализация добавления звонков """
@@ -109,6 +109,28 @@ class TimePostSerializers(serializers.ModelSerializer):
     class Meta:
         model = TimeLesson
         fields = ('number', 'start', 'end', 'day_week')
+
+
+class TeacherSchedulesSerializers(serializers.ModelSerializer):
+    """ Сериализация расписания преподавателей """
+
+    time = serializers.SerializerMethodField()
+
+    class Meta:
+        model = TeacherSchedule
+        fields = ('teacher', 'time', 'business')
+
+    def get_time(self, obj):
+        times = TimeLesson.objects.filter(tid=obj.lesson_time.tid)
+        return TimeSerializers(times[0]).data
+
+
+class TeacherSchedulePostSerializers(serializers.ModelSerializer):
+    """ Добавить расписание преподавателей """
+
+    class Meta:
+        model = TeacherSchedule
+        fields = ('business',)
 
 
 class SheduleSerializers(serializers.ModelSerializer):
@@ -123,10 +145,23 @@ class SheduleSerializers(serializers.ModelSerializer):
 class LessonSerializers(serializers.ModelSerializer):
     """ Сериализация занятий """
     shedule = SheduleSerializers()
+    group = GroupSerializers()
+    discipline = DisciplineSerializers()
+    auditurium = AudituriumSerializers()
+    teacher = TeachersSerializers()
 
     class Meta:
         model = Lesson
-        fields = ('time', 'shedule', 'group', 'teacher')
+        fields = ('time', 'shedule', 'group', 'teacher', 'day_week', 'discipline', 'auditurium')
+
+
+class LessonPostSerializers(serializers.ModelSerializer):
+    """ Сериализация занятий """
+    # shedule = SheduleSerializers()
+
+    class Meta:
+        model = Lesson
+        fields = ('number',)
 
 
 class SheduleUserSerializers(serializers.ModelSerializer):

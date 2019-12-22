@@ -6,7 +6,7 @@ from .models import *
 class LessonAdmin(admin.ModelAdmin):
     """ Занятие """
 
-    list_display = ('number', 'time', 'group', 'teacher')
+    list_display = ('time', 'group', 'teacher', 'day_week', 'discipline', 'auditurium')
 
 admin.site.register(Lesson, LessonAdmin)
 
@@ -14,7 +14,7 @@ admin.site.register(Lesson, LessonAdmin)
 class AudituriumAdmin(admin.ModelAdmin):
     """ Аудитория """
 
-    list_display = ('name', 'address', 'capacity')
+    list_display = ('name', 'capacity', 'shedule')
 
 admin.site.register(Auditurium, AudituriumAdmin)
 
@@ -78,7 +78,7 @@ admin.site.register(GroupWorkload, GroupWorkloadAdmin)
 class TimeLessonAdmin(admin.ModelAdmin):
     """ Время """
 
-    list_display = ('number', 'start', 'end', 'day_week', 'shedule')
+    list_display = ('number', 'start', 'end', 'shedule')
 
 admin.site.register(TimeLesson, TimeLessonAdmin)
 

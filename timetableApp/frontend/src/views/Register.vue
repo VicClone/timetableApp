@@ -80,7 +80,7 @@ export default {
         const { data: { token } } = await form.post('/api/login/')
         this.$store.dispatch('auth/saveToken', { token, remember: true })
         await this.$store.dispatch('auth/fetchUser')
-        this.$router.push({ name: 'home' })
+        this.$router.push({ name: 'profile' })
       } catch (e) {
         console.log('error: ', e)
       }

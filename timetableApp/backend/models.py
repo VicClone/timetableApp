@@ -37,7 +37,6 @@ class TimeLesson(models.Model):
     number = models.IntegerField(verbose_name="Номер занятия")
     start = models.TimeField(verbose_name="Начало")
     end = models.TimeField(verbose_name="Конец")
-    day_week = models.IntegerField(verbose_name="День недели")
     shedule = models.ForeignKey(Shedule, verbose_name="Расписание", on_delete=models.CASCADE, null=True)
 
     class Meta:
@@ -49,8 +48,8 @@ class Auditurium(models.Model):
     """ Модель аудитории """
 
     name = models.CharField(primary_key=True, verbose_name="Название", max_length=25)
-    address = models.CharField(verbose_name="Адрес", max_length=100)
     capacity = models.IntegerField(verbose_name="Вместимость", default=0)
+    shedule = models.ForeignKey(Shedule, verbose_name="Расписание", on_delete=models.CASCADE, null=True)
 
     class Meta:
         verbose_name = "Аудитория"
@@ -147,8 +146,12 @@ class Lesson(models.Model):
     number = models.IntegerField(verbose_name="Номер", default=0)
     group = models.ForeignKey(Group, verbose_name="Группа", on_delete=models.CASCADE)
     teacher = models.ForeignKey(Teacher, verbose_name="Преподаватель", on_delete=models.CASCADE)
-    time = models.ForeignKey(TimeLesson, verbose_name="Звонок", on_delete=models.CASCADE, null="True")
+    # time = models.ForeignKey(TimeLesson, verbose_name="Звонок", on_delete=models.CASCADE, null="True")
+    time = models.CharField(verbose_name="Звонок", max_length=20, default='00:00')
     shedule = models.ForeignKey(Shedule, verbose_name="Расписание", on_delete=models.CASCADE, null="True")
+    day_week = models.CharField(verbose_name="День недели", default='пн', max_length=4)
+    discipline = models.ForeignKey(Discipline, verbose_name="Дисциплина", on_delete=models.CASCADE, null=True)
+    auditurium = models.ForeignKey(Auditurium, verbose_name="Аудитория", on_delete=models.CASCADE, null=True)
 
     class Meta:
         verbose_name = "Занятие"

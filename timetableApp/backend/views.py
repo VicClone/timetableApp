@@ -8,6 +8,7 @@ from rest_framework.views import APIView
 from .models import *
 from .serializers import *
 from timetableApp.core.models import User
+from .algorithm import TimetableCreator, Lesson as LessonA, Room, Rooms, Teacher as TeacherA, Calendar, Teachers as TeachersA, Class
 
 class LessonsView(APIView):
     """ Уроки """
@@ -39,13 +40,48 @@ class TeachersView(APIView):
         else:
             return Response({"status": "Error"})
 
+
+class TeacherShedulesView(APIView):
+    """ Расписание преподавателя """
+    def get(self, request):
+        teacherId = request.GET.get("teacherId")
+        teacher = Teacher.objects.filter(tid=teacherId)
+        teacherSchedules = TeacherSchedule.objects.filter(teacher=teacher[0])
+        serializer = TeacherSchedulesSerializers(teacherSchedules, many=True)
+        return Response(serializer.data)
+
+    def post(self, request):
+        teacherId = request.GET.get("teacherId")
+        teacher = Teacher.objects.filter(tid=teacherId)
+        timeId = request.GET.get("timeId")
+        time = TimeLesson.objects.filter(tid=timeId)
+        teacherSchedules = TeacherSchedulePostSerializers(data=request.data)
+        if discipline.is_valid():
+            discipline.save(shedule=shedule[0], time=time[0])
+            return Response({"status": "Add"})
+        else:
+            return Response({"status": "Error"})
+    
+
 class AudituriumsView(APIView):
     """ Аудитории """
 
     def get(self, request):
-        audituriums = Auditurium.objects.all()
+        sheduleId = request.GET.get("sheduleId")
+        shedule = Shedule.objects.filter(sid=sheduleId)
+        audituriums = Auditurium.objects.filter(shedule=shedule[0])
         serializer = AudituriumSerializers(audituriums, many=True)
         return Response(serializer.data)
+
+    def post(self, request):
+        sheduleId = request.GET.get("sheduleId")
+        shedule = Shedule.objects.filter(sid=sheduleId)
+        auditurium = AudituriumPostSerializers(data=request.data)
+        if auditurium.is_valid():
+            auditurium.save(shedule=shedule[0])
+            return Response({"status": "Add"})
+        else:
+            return Response({"status": "Error"})
 
 
 class DisciplineView(APIView):
@@ -176,3 +212,629 @@ class SheduleView(APIView):
         shedule = Shedule.objects.filter(sid=sheduleId)
         serializer = SheduleSerializers(shedule)
         return Response({"data": serializer.data})
+
+
+class GenerateSheduleView(APIView):
+    """ Генератор расписания """
+
+    def get(self, request):
+        sheduleId = request.GET.get("sheduleId")
+        shedule = Shedule.objects.filter(sid=sheduleId)
+        lessons = Lesson.objects.filter(shedule=shedule[0]) 
+        serializer = LessonSerializers(lessons, many=True)
+        return Response({"data": serializer.data})
+
+    def post(self, request):
+        Lesson.objects.all().delete()
+
+        sheduleId = request.GET.get("sheduleId")
+        shedules = Shedule.objects.filter(sid=sheduleId)
+
+        disciplines = Discipline.objects.filter(shedule=shedules[0])
+        teachersSh = Teacher.objects.filter(shedule=shedules[0])
+        groups = Group.objects.filter(shedule=shedules[0])
+        auditoriums = Auditurium.objects.filter(shedule=shedules[0])
+
+        LECTURE = 'lecture'
+        PRACTICE = 'practice'
+        LABORATORY = 'laboratory'
+        TYPE_LESSON = (LECTURE, PRACTICE, LABORATORY)
+        DAY_WEEK = ('пн', 'вт', 'ср', 'чт', 'пт')
+        TIMES = ('8:00', '9:00', '10:00', '11:00', '12:00')
+
+        d1 = {
+            'пн': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'вт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'ср': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'чт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'пт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+        }
+        d2 ={
+            'пн': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'вт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'ср': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'чт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'пт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+        }
+
+        room1 = {
+            'пн': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'вт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'ср': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'чт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'пт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+        }
+        room2 = {
+            'пн': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'вт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'ср': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'чт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'пт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+        }
+        room3 = {
+            'пн': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'вт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'ср': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'чт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'пт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+        }
+        room4 = {
+            'пн': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'вт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'ср': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'чт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'пт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+        }
+        room5 = {
+            'пн': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'вт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'ср': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'чт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'пт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+        }
+        room6 = {
+            'пн': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'вт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'ср': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'чт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'пт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+        }
+
+        teacher_1 = {
+            'пн': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'вт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'ср': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'чт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'пт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+        }
+        teacher_2 = {
+            'пн': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'вт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'ср': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'чт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'пт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+        }
+        teacher_3 = {
+            'пн': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'вт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'ср': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'чт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'пт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+        }
+        teacher_4 = {
+            'пн': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'вт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'ср': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'чт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'пт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+        }
+        teacher_5 = {
+            'пн': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'вт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'ср': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'чт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'пт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+        }
+        teacher_6 = {
+            'пн': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'вт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'ср': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'чт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+            'пт': {
+                '8:00': False,
+                '9:00': False,
+                '10:00': False,
+                '11:00': False,
+                '12:00': False
+            },
+        }
+
+        teachersA = []
+        workloadA = {}
+        classes = []
+        rooms = []
+
+        for teacher in teachersSh:
+            lesson = LessonA(str(teacher.discipline.did), [LECTURE])
+            teachersA.append(TeacherA(name=str(teacher.tid), lesson=lesson, timetable=Calendar(teacher_1)))
+
+        for discipline in disciplines:
+            workloadA[LessonA(str(discipline.did), is_type=LECTURE)] = 3
+
+        for group in groups:
+            classes.append(
+                Class(
+                    name=str(group.gid),
+                    count=group.people_count,
+                    timetable=Calendar(d1),
+                    workload=workloadA,
+                    max_lsns_per_day=group.max_repeat_lessons,
+                    max_lsn_per_day=group.max_lessons,
+                )
+            )
+
+        for auditorium in auditoriums:
+            rooms.append(Room(TYPE_LESSON, auditorium.capacity, name=str(auditorium.name), timetable=Calendar(room1)))
+        teachersA = TeachersA(teachersA)
+        rooms = Rooms(rooms)
+
+        creator = TimetableCreator(rooms, teachersA, classes)
+        creator.create()
+
+        lessonShedule = LessonPostSerializers(data={})
+        for _class_ in classes:
+            # print(_class_.name, _class_.timetable)
+            for dayWeek in _class_.timetable.data:
+                for time in _class_.timetable.data[dayWeek]:
+                    itemLesson = _class_.timetable.data[dayWeek][time]
+                    if (itemLesson == False):
+                        continue
+                    print(itemLesson[0])
+
+                    groups = Group.objects.filter(gid=_class_.name)
+                    day_week=dayWeek
+                    timeSh=time
+                    print(uuid.UUID(str(itemLesson[1])), 'uuid')
+                    disciplines = Discipline.objects.filter(did=uuid.UUID(str(itemLesson[1])).hex)
+                    teachersSh = Teacher.objects.filter(tid=uuid.UUID(str(itemLesson[0])).hex)
+                    auditoriums = Auditurium.objects.filter(name=itemLesson[2])
+                    lessonShedule = LessonPostSerializers(data={})
+
+                    if lessonShedule.is_valid():
+                        lessonShedule.save(shedule=shedules[0], group=groups[0], day_week=day_week, time=timeSh, teacher=teachersSh[0], discipline=disciplines[0], auditurium=auditoriums[0])                        
+                        # return Response({"status": "Add"})
+                    else:
+                        return Response({"error": "error"})
+        
+        return Response({"status": "Add"})
+
+            # print(type(_class_.timetable.data.get("пн").get("8:00")[0]))
+        
+        correct_ = []
+        wrong_positions = []
+        for _class_ in classes:
+            lesson_sum = 0
+        for day_of_the_week in _class_.timetable.data.values():
+            for i in day_of_the_week:
+                if day_of_the_week.get(i) is not False:
+                    lesson_sum += 1
+        if sum(_class_.workload.values())!=lesson_sum:
+            correct_.append(0)
+            wrong_positions.append(_class_.name)
+        else:
+            correct_.append(1)
+        return Response({"status": "post generate"})

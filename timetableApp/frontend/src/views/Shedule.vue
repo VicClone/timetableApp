@@ -51,6 +51,15 @@
           v-if="isCurComp('groupworkload')"
           :idShedule="sheduleId"  >
         </group-workload>
+        <generate
+          v-if="isCurComp('generate')"
+          :idShedule="sheduleId"  >
+        </generate>
+        <auditoriums
+          v-if="isCurComp('auditoriums')"
+          :idShedule="sheduleId">
+
+        </auditoriums>
       </v-col>
     </v-row>
   </v-container>
@@ -60,12 +69,12 @@
 export default {
   data: () => ({
     params: [
-      {
+      /* {
         link: {
           name: 'times'
         },
         text: 'Звонки'
-      },
+      }, */
       {
         link: {
           name: 'classes'
@@ -90,27 +99,27 @@ export default {
         },
         text: 'Учителя'
       },
-      {
+      /* {
         link: {
           name: 'teachersShedule'
         },
         text: 'Расписания учителей'
-      },
+      }, */
       {
         link: {
-          name: 'home'
+          name: 'auditoriums'
         },
         text: 'Кабинеты'
       },
-      {
+      /* {
         link: {
           name: 'auditoriumShedule'
         },
         text: 'Расписания кабинетов'
-      },
+      }, */
       {
         link: {
-          name: 'home'
+          name: 'generate'
         },
         text: 'Настройки расписания'
       }
@@ -123,7 +132,10 @@ export default {
     subjects: () => import('../components/shedule/subjects'),
     teachers: () => import('../components/shedule/teachers'),
     groupWorkload: () => import('../components/shedule/groupWorkload'),
-    bussinessTeacher: () => import('../components/bussiness/bussinessTeacher')
+    bussinessTeacher: () => import('../components/shedule/bussinessTeacher'),
+    generate: () => import('../components/shedule/generate'),
+    auditoriums: () => import('../components/shedule/auditoriums')
+
   },
   computed: {
     sheduleId () {

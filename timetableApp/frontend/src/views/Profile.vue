@@ -18,7 +18,7 @@
                   name: 'shedule',
                   params: {
                     id: props.item.link.sid,
-                    component: 'times'
+                    component: 'classes'
                   }
                 }">
                 Открыть
